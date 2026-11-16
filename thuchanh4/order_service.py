@@ -5,17 +5,11 @@ from database import get_db_connection, create_tables
 
 app = Flask(__name__)
 
-# Cau hinh cac service
 PRODUCT_SERVICE_URL = "http://127.0.0.1:5001"
 AUTH_SERVICE_URL = "http://127.0.0.1:5000"
 AUTH_VERIFY_URL = AUTH_SERVICE_URL + "/auth"
 
 ALLOWED_ORDER_STATUS = ["pending", "completed", "cancelled"]
-
-
-# =====================================
-# 1. KIEM TRA TOKEN
-# =====================================
 
 def get_authorization_header():
     return request.headers.get("Authorization", "").strip()
@@ -82,11 +76,6 @@ def get_product(product_id):
         app.logger.error("Loi ket noi Product Service: %s", error)
         return None, "Khong ket noi duoc Product Service"
 
-
-# =====================================
-# 3. KIEM TRA TON KHO VA TINH TIEN
-# =====================================
-
 def validate_product(product_id, quantity):
 
     product, error = get_product(product_id)
@@ -120,11 +109,6 @@ def validate_product(product_id, quantity):
         "total_price": price * quantity
     }, None
 
-
-# =====================================
-# 4. CAP NHAT TONG TIEN DON HANG
-# =====================================
-
 def update_order_total(conn, order_id):
 
     conn.execute(
@@ -150,12 +134,6 @@ def home():
         "endpoints": ["/orders", "/order_items"]
     }), 200
 
-
-# =====================================
-# 5. LAY DANH SACH DON HANG
-# GET /orders
-# =====================================
-
 @app.route("/orders", methods=["GET"])
 def get_orders():
 
@@ -173,12 +151,6 @@ def get_orders():
 
     finally:
         conn.close()
-
-
-# =====================================
-# 6. XEM CHI TIET DON HANG
-# GET /orders/id
-# =====================================
 
 @app.route("/orders/<int:order_id>", methods=["GET"])
 def get_order(order_id):
@@ -209,12 +181,6 @@ def get_order(order_id):
 
     finally:
         conn.close()
-
-
-# =====================================
-# 7. TAO DON HANG
-# POST /orders
-# =====================================
 
 @app.route("/orders", methods=["POST"])
 def create_order():
@@ -331,12 +297,6 @@ def create_order():
     finally:
         conn.close()
 
-
-# =====================================
-# 8. CAP NHAT TRANG THAI DON HANG
-# PUT /orders/id
-# =====================================
-
 @app.route("/orders/<int:order_id>", methods=["PUT"])
 def update_order(order_id):
 
@@ -384,12 +344,6 @@ def update_order(order_id):
     finally:
         conn.close()
 
-
-# =====================================
-# 9. XOA DON HANG
-# DELETE /orders/id
-# =====================================
-
 @app.route("/orders/<int:order_id>", methods=["DELETE"])
 def delete_order(order_id):
 
@@ -428,12 +382,6 @@ def delete_order(order_id):
     finally:
         conn.close()
 
-
-# =====================================
-# 10. LAY DANH SACH CHI TIET DON HANG
-# GET /order_items
-# =====================================
-
 @app.route("/order_items", methods=["GET"])
 def get_order_items():
 
@@ -451,12 +399,6 @@ def get_order_items():
 
     finally:
         conn.close()
-
-
-# =====================================
-# 11. XEM CHI TIET MOT MAT HANG
-# GET /order_items/id
-# =====================================
 
 @app.route("/order_items/<int:item_id>", methods=["GET"])
 def get_order_item(item_id):
@@ -479,12 +421,6 @@ def get_order_item(item_id):
 
     finally:
         conn.close()
-
-
-# =====================================
-# 12. THEM MAT HANG VAO DON
-# POST /order_items
-# =====================================
 
 @app.route("/order_items", methods=["POST"])
 def create_order_item():
@@ -564,12 +500,6 @@ def create_order_item():
 
     finally:
         conn.close()
-
-
-# =====================================
-# 13. CAP NHAT MAT HANG
-# PUT /order_items/id
-# =====================================
 
 @app.route("/order_items/<int:item_id>", methods=["PUT"])
 def update_order_item(item_id):
@@ -659,12 +589,6 @@ def update_order_item(item_id):
     finally:
         conn.close()
 
-
-# =====================================
-# 14. XOA MAT HANG
-# DELETE /order_items/id
-# =====================================
-
 @app.route("/order_items/<int:item_id>", methods=["DELETE"])
 def delete_order_item(item_id):
 
@@ -710,11 +634,6 @@ def delete_order_item(item_id):
 
     finally:
         conn.close()
-
-
-# =====================================
-# 15. CHAY ORDER SERVICE
-# =====================================
 
 if __name__ == "__main__":
     create_tables()
